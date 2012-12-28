@@ -16,3 +16,15 @@ jQuery integration
 
 Ozy maps all jQuery functions available, which means it can operates with whatever version on jQuery you have - 
 old or future one
+
+Requirements
+------------
+TODO
+
+Instalation
+-----------
+TODO
+
+Documentation
+-------------
+TODO
