@@ -16,26 +16,26 @@ namespace Ozy\Statement;
  *  
  *  - getName() - this will be used for naming the statement for later js recognition
  *
+ * @package ozy
  * @author Lyubomir Slavilov <lyubo.slavilov@gmail.com>
  */
 abstract class AbstractStatement {
 	
 	protected $_jsonStructure;
-	private $_environment;
+	protected $_environment;
 	
 	/**
 	 * Constructor - initializes the $_jsonStructure property.
 	 */
-	public function __construct() {
+	public function __construct($environment) {
+		$this->_environment = $environment;
 		$this->_jsonStructure = new \stdClass();
 	}
 	/**
 	 * Called before json_encode(). Here each subclass will change the
 	 * jsonStructure representing the statement
 	 * 	 */
-	protected function prepareJsonStructure(){
-		
-	}
+	protected function prepareJsonStructure();
 	
 	/**
 	 * @return \stdClass

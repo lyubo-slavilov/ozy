@@ -18,21 +18,29 @@ namespace Ozy\Statement;
  *	// function body
  * }
  * </code>
+ * 
+ * @package ozy
  * @author Lyubomir Slavilov <lyubo.slavilov@gmail.com>
  */
 class FunctionStatement extends AbstractStatement{
 		
-	public function __construct($name, $arguments, $body) {
+	public function __construct($name, $arguments, $body, $environment) {
 		
-		parent::__construct();
+		parent::__construct($environment);
 		
-		$this->_jsonStructure->name = $name;
-		$this->_jsonStructure->arguments = $arguments;
-		$this->_jsonStructure->body = $body;
+		$isDev = $this->_environment == 'dev';
+		
+		$nameProp = $isDev ? 'name' : 'n';
+		$argumentsProp = $isDev ? 'arguments' : 'a';
+		$bodyProp = $isDev ? 'body' : 'b';
+		
+		$this->_jsonStructure->$$nameProp = $name;
+		$this->_jsonStructure->$$argumentsProp = $arguments;
+		$this->_jsonStructure->$$bodyProp = $body;
 		
 	}
 
-	protected function getName($environment = 'dev') {
-		return $environment == 'dev' ? 'function' : 'f';
+	protected function getName() {
+		return $this->_environment == 'dev' ? 'function' : 'f';
 	}
 }

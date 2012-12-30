@@ -16,17 +16,25 @@ namespace Ozy\Statement;
  *  foo(2, 5, 'bar');
  * </code>
  *
+ * @package ozy
  * @author Lyubomir Slavilov <lyubo.slavilov@gmail.com>
  */
 class CallStatement extends AbstractStatement{
 
-	public function __construct($name, $parameters) {
-		parent::__construct();
-		$this->_jsonStructure->name = $name;
-		$this->_jsonStructure->parameters = $parameters;
+	public function __construct($name, $parameters, $environment) {
+		parent::__construct($environment);
+		
+		$isDev = $this->_environment == 'dev';
+		
+		$nameProp = $isDev ? 'name' : 'n';
+		$parametersProp = $isDev ? 'parameters' : 'p';
+		
+		$this->_jsonStructure->$$nameProp = $name;
+		$this->_jsonStructure->$$parametersProp = $arguments;
+		
 	}
 
-	protected function getName($environment = 'dev') {
-		$environment == 'dev' ? 'c' : 'call';
+	protected function getName() {
+		return $this->_environment == 'dev' ? 'c' : 'call';
 	}
 }
