@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Ozy\Statement;
+namespace Ozy;
 /**
  * Abstraction for all Ozy statements.
  * 
@@ -19,7 +19,7 @@ namespace Ozy\Statement;
  * @package ozy
  * @author Lyubomir Slavilov <lyubo.slavilov@gmail.com>
  */
-abstract class AbstractStatement {
+abstract class Statement {
 	
 	protected $_jsonStructure;
 	protected $_environment;
@@ -35,12 +35,14 @@ abstract class AbstractStatement {
 	 * Called before json_encode(). Here each subclass will change the
 	 * jsonStructure representing the statement
 	 * 	 */
-	protected function prepareJsonStructure();
+	protected function prepareJsonStructure(){
+		
+	}
 	
 	/**
 	 * @return \stdClass
 	 */
-	protected function getJsonStructure(){
+	public function getJsonStructure(){
 		$this->prepareJsonStructure();
 		return $this->_jsonStructure;
 	}
@@ -48,5 +50,5 @@ abstract class AbstractStatement {
 	/**
 	 * @abstract
 	 */
-	abstract protected function getName($environment = 'dev');
+	abstract public function getName();
 }

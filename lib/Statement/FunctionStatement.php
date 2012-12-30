@@ -22,7 +22,7 @@ namespace Ozy\Statement;
  * @package ozy
  * @author Lyubomir Slavilov <lyubo.slavilov@gmail.com>
  */
-class FunctionStatement extends AbstractStatement{
+class FunctionStatement extends \Ozy\Statement{
 		
 	public function __construct($name, $arguments, $body, $environment) {
 		
@@ -34,13 +34,13 @@ class FunctionStatement extends AbstractStatement{
 		$argumentsProp = $isDev ? 'arguments' : 'a';
 		$bodyProp = $isDev ? 'body' : 'b';
 		
-		$this->_jsonStructure->$$nameProp = $name;
-		$this->_jsonStructure->$$argumentsProp = $arguments;
-		$this->_jsonStructure->$$bodyProp = $body;
+		$this->_jsonStructure->{$nameProp} = $name;
+		$this->_jsonStructure->{$argumentsProp} = $arguments;
+		$this->_jsonStructure->{$bodyProp} = $body;
 		
 	}
 
-	protected function getName() {
+	public function getName() {
 		return $this->_environment == 'dev' ? 'function' : 'f';
 	}
 }

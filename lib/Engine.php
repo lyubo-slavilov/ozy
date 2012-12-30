@@ -14,6 +14,7 @@ use Ozy\Statement\AbstractStatement;
 use Ozy\Statement\FunctionStatement;
 use Ozy\Statement\CallStatement;
 use Ozy\Statement\JqueryStatement;
+use Ozy\Statement\ScriptStatement;
 
 /**
  * TODO
@@ -78,10 +79,11 @@ class Engine {
 	 */
 	public function addFunction() {
 		$args = func_get_args();
-		$name = array_shift($arg);
-		$body = array_pop($args);
+		$name = @array_shift($arg);
+		$body = @array_pop($args);
 		
-		$this->addStatement(new FunctionStatement($name, $args, $body, $this->_environment));
+		return $this->addStatement(new FunctionStatement($name, $args, $body, $this->_environment));
+		
 	}
 	
 	/**
@@ -106,14 +108,14 @@ class Engine {
 	 */
 	public function call(){
 		$args = func_get_args();
-		$name = array_shift($args);
-		$this->addStatement(new CallStatement($name, $args, $this->_environment));
+		$name = @array_shift($args);
+		return $this->addStatement(new CallStatement($name, $args, $this->_environment));
 	}
 	/**
 	 * Adds a statement to the queue 
 	 * @param \Ozy\Statement\AbstractStatement $statement
 	 */
-	public function addStatement(AbstractStatement $statement){
+	public function addStatement(Statement $statement){
 		$this->_closeChain();
 		$this->_statementQueue->enqueue($statement);
 		return $this;
@@ -125,6 +127,11 @@ class Engine {
 		$this->_currentStatementChain = $jquery;
 		return $this;
 	}
+	
+	public function script($body){
+		return $this->addStatement(new ScriptStatement($body, $this->_environment));
+	}
+
 	/**
 	 * 
 	 * @return string A JSON representation of all statements
@@ -141,13 +148,14 @@ class Engine {
 		$output->type = 'statement';
 		$output->statements = $statements;
 
-		return json_encode($output, JSON_FORCE_OBJECT);
+		return json_encode($output);
 	}
 	
 	public function __call($name, $arguments) {
 		if(null !== $this->_currentStatementChain){
 			if(is_callable(array($this->_currentStatementChain, $name))){
-				call_user_func(array($this->_currentStatementChain, $name, $arguments));
+				call_user_func(array($this->_currentStatementChain, $name), $arguments);
+				return $this;
 			}else{
 				$className = get_class($this->_currentStatementChain);
 				throw new Ozy\Exception(sprintf('The current statement in the chain %s has no method %s()',$className, $name));

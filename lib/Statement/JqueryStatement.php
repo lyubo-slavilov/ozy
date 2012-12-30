@@ -15,7 +15,7 @@ namespace Ozy\Statement;
  * @package ozy
  * @author Lyubomir Slavilov <lyubo.slavilov@gmail.com>
  */
-class JqueryStatement extends AbstractStatement{
+class JqueryStatement extends \Ozy\Statement{
 	private $_selector;
 	private $_chain;
 	
@@ -25,17 +25,29 @@ class JqueryStatement extends AbstractStatement{
 		$this->_chain = new \SplQueue();
 	}
 
-	protected function getName() {
-		return $this->_environment == 'dev' ? 'j' : 'jquery';
+	public function getName() {
+		return $this->_environment == 'dev' ? 'jquery' : 'j';
 	}
 	
 	public function __call($name, $arguments) {
 		$pair = new \stdClass();
-		$nameProp = $this->_environment == 'dev' ? 'n' : 'name';
-		$paramsProp = $this->_environment == 'dev' ? 'p' : 'parameters';
+		$nameProp = $this->_environment == 'dev' ? 'name' : 'n';
+		$paramsProp = $this->_environment == 'dev' ? 'parameters' : 'p';
 		
-		$pair->$$nameProp = $name;
-		$pair->$$paramsProp = $arguments;
+		$pair->{$nameProp} = $name;
+		$pair->{$paramsProp} = $arguments;
 		$this->_chain->enqueue($pair);
+	}
+	
+	protected function prepareJsonStructure() {
+		$structure = new \stdClass();
+		$selectorProp = $this->_environment == 'dev' ? 'selector' : 's';
+		$chainProp = $this->_environment == 'dev' ? 'chain' : 'c';
+		$structure->{$selectorProp} = $this->_selector;
+		$structure->{$chainProp} = array();
+		foreach($this->_chain as $pair){
+			$structure->{$chainProp}[] = $pair;
+		}
+		$this->_jsonStructure = $structure;
 	}
 }

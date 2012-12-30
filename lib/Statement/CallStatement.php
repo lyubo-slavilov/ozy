@@ -19,9 +19,9 @@ namespace Ozy\Statement;
  * @package ozy
  * @author Lyubomir Slavilov <lyubo.slavilov@gmail.com>
  */
-class CallStatement extends AbstractStatement{
+class CallStatement extends \Ozy\Statement{
 
-	public function __construct($name, $parameters, $environment) {
+	public function __construct($name, $parameters = array(), $environment) {
 		parent::__construct($environment);
 		
 		$isDev = $this->_environment == 'dev';
@@ -29,12 +29,12 @@ class CallStatement extends AbstractStatement{
 		$nameProp = $isDev ? 'name' : 'n';
 		$parametersProp = $isDev ? 'parameters' : 'p';
 		
-		$this->_jsonStructure->$$nameProp = $name;
-		$this->_jsonStructure->$$parametersProp = $arguments;
+		$this->_jsonStructure->{$nameProp} = $name;
+		$this->_jsonStructure->{$parametersProp} = $parameters;
 		
 	}
 
-	protected function getName() {
-		return $this->_environment == 'dev' ? 'c' : 'call';
+	public function getName() {
+		return $this->_environment == 'dev' ? 'call' : 'c';
 	}
 }
