@@ -10,7 +10,6 @@
  */
 namespace Ozy;
 
-use Ozy\Statement\AbstractStatement;
 use Ozy\Statement\FunctionStatement;
 use Ozy\Statement\CallStatement;
 use Ozy\Statement\JqueryStatement;
@@ -79,7 +78,7 @@ class Engine {
 	 */
 	public function addFunction() {
 		$args = func_get_args();
-		$name = @array_shift($arg);
+		$name = @array_shift($args);
 		$body = @array_pop($args);
 		
 		return $this->addStatement(new FunctionStatement($name, $args, $body, $this->_environment));
@@ -131,30 +130,40 @@ class Engine {
 	public function script($body){
 		return $this->addStatement(new ScriptStatement($body, $this->_environment));
 	}
+	/**
+	 * Shorthand to $this->call('alert', $text)
+	 * @param string $text
+	 */
+	public function alert($text){
+		return $this->call('alert', $text);
+	}
 
 	/**
 	 * 
 	 * @return string A JSON representation of all statements
 	 */
 	public function toJson(){
+		$this->_closeChain();
 		$statements = array();
 		foreach($this->_statementQueue as $statement){
 			$statements[] = array(
-					$statement->getName($this->_environment) => $statement->getJsonStructure()
+					'n' => $statement->getName(),
+					'o' => $statement->getJsonStructure(),
 			);
 		}
 		$output = new \stdClass();
 		$output->status = 'success';
-		$output->type = 'statement';
+		$output->type = 'statement-chain';
 		$output->statements = $statements;
 
 		return json_encode($output);
 	}
 	
 	public function __call($name, $arguments) {
+//		var_dump($arguments);
 		if(null !== $this->_currentStatementChain){
 			if(is_callable(array($this->_currentStatementChain, $name))){
-				call_user_func(array($this->_currentStatementChain, $name), $arguments);
+				call_user_func(array($this->_currentStatementChain, $name), $arguments, 'engine-call');
 				return $this;
 			}else{
 				$className = get_class($this->_currentStatementChain);

@@ -18,24 +18,36 @@ namespace Ozy\Statement;
 class JqueryStatement extends \Ozy\Statement{
 	private $_selector;
 	private $_chain;
+	private $_props;
+	
 	
 	public function __construct($selector, $environment) {
 		parent::__construct($environment);
 		$this->_selector = $selector;
 		$this->_chain = new \SplQueue();
+		
+		$isDev = $this->_environment == 'dev';
+		$this->_props = new \stdClass();
+		$this->_props->method = $isDev ? 'method' : 'm';
+		$this->_props->parameters = $isDev ? 'parameters' : 'p';
 	}
 
 	public function getName() {
 		return $this->_environment == 'dev' ? 'jquery' : 'j';
 	}
 	
-	public function __call($name, $arguments) {
-		$pair = new \stdClass();
-		$nameProp = $this->_environment == 'dev' ? 'name' : 'n';
-		$paramsProp = $this->_environment == 'dev' ? 'parameters' : 'p';
 		
-		$pair->{$nameProp} = $name;
-		$pair->{$paramsProp} = $arguments;
+	public function __call($method, $arguments) {
+		$pair = new \stdClass();
+		$pair->{$this->_props->method} = $method;
+		
+		if($arguments[count($arguments)-1] == 'engine-call'){
+			//this is external call
+			$pair->{$this->_props->parameters} = $arguments[0];
+		}else{
+			$pair->{$this->_props->parameters} = $arguments;
+		}
+		
 		$this->_chain->enqueue($pair);
 	}
 	

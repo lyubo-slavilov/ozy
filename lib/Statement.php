@@ -32,11 +32,20 @@ abstract class Statement {
 		$this->_jsonStructure = new \stdClass();
 	}
 	/**
-	 * Called before json_encode(). Here each subclass will change the
-	 * jsonStructure representing the statement
-	 * 	 */
+	 * Called before getJsonStructure() returns the structure.
+	 * Subclasses can change the structure as needed.
+	 */
 	protected function prepareJsonStructure(){
 		
+	}
+	
+	protected function convertToJavascript(){
+		$class = get_class($this);
+		return sprintf('/* Javascript representation for %s is not implemented */', $class);
+	}
+	
+	public function toJavascript(){
+		return $this->convertToJavascript();
 	}
 	
 	/**
@@ -51,4 +60,6 @@ abstract class Statement {
 	 * @abstract
 	 */
 	abstract public function getName();
+	
+	
 }

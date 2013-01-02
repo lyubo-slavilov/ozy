@@ -21,7 +21,7 @@ namespace Ozy\Statement;
  */
 class CallStatement extends \Ozy\Statement{
 
-	public function __construct($name, $parameters = array(), $environment) {
+	public function __construct($name, $parameters, $environment) {
 		parent::__construct($environment);
 		
 		$isDev = $this->_environment == 'dev';
@@ -37,4 +37,5 @@ class CallStatement extends \Ozy\Statement{
 	public function getName() {
 		return $this->_environment == 'dev' ? 'call' : 'c';
 	}
+	
 }

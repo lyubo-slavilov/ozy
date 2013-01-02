@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    <IfModule mod_vhost_alias.c>
+        RewriteBase /ozy
+    </IfModule>
+		
+    RewriteCond %{REQUEST_FILENAME} !-f 
+    RewriteRule ^(.*)$ /ozy/controller.php/$1 [QSA,L]
+</IfModule>
