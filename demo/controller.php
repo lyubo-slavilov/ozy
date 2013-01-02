@@ -20,10 +20,7 @@ class DemoController
 		include 'index.php';
 		die();
 	}
-	/**
-	 * @invoker
-	 * io.call();
-	 */
+
 	public function helloAction(){
 		$ozy = $this->createOzy();
 		
@@ -119,28 +116,22 @@ class DemoController
 		return $ozy;
 	}
 	
-	public function testAction(){
-		$ozy = $this->createOzy('dev');
-		
-		$ozy->jquery('#list-of-truths li')->each()
-					->css(array('color' => 'silver'))
-					->find('span')
-					->css(array('color' => 'red'));
-						//->text('banana');
-		
-		
-		return $ozy;
-	}
-	//Some helper methods
+	//Some helpers and stuff
 	
-	public function __construct($env='prod') {
-		$this->env = $env;
+	public function testAction(){
+		//well dorung the demo development this was helpfull
 	}
+
 	private function createOzy($env = null){
 		return new Ozy\Engine($env != null?$env:$this->env);
 	}
 	
-}
+	//why this is the last method? well... I dunno :)
+	public function __construct($env='prod') {
+		$this->env = $env;
+	}
+	
+} //DemoController
 
 
 
@@ -161,34 +152,9 @@ $action .= 'Action';
 
 if(is_callable(array($controller, $action))){
 	$ozy = call_user_func(array($controller, $action));
-	
 }else{
 	$ozy = new Ozy\Engine();
 	$ozy->call('alert', 'Invalid action: '.$action);
 }
 header('Content-Type: application/json');
 echo $ozy->toJson();
-	
-
-
-//require __DIR__ . '/../lib/Autoloader.php';
-//Ozy\Autoloader::register();
-//
-//$ozy = new Ozy\Engine();
-//
-//$ozy
-//	->call('alert', 'Aloha')
-//	->addFunction('foo', 'bar', 'baz', 'return foo + bar + baz;')
-//	->jquery('body')
-//		->show()
-//		->css(array(
-//				'background' => 'none',
-//				'color' => 'black'
-//		))
-//		->fadeIn()
-//	->call('allSettedUp')
-//	->script('vas a = \'aloha!\'');
-//
-//header('Content-Type: application/json');
-//echo $ozy->toJson();
-
