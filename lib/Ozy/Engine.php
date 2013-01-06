@@ -167,10 +167,10 @@ class Engine {
 				return $this;
 			}else{
 				$className = get_class($this->_currentStatementChain);
-				throw new Ozy\Exception(sprintf('The current statement in the chain %s has no method %s()',$className, $name));
+				throw new \Ozy\Exception(sprintf('The current statement in the chain %s has no method %s()',$className, $name));
 			}
 		}else{
-			throw new Ozy\Exception(sprintf('Ozy engine has no method %s()', $name));
+			throw new \Ozy\Exception(sprintf('Ozy engine has no method %s()', $name));
 		}
 	}
 }
