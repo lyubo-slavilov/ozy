@@ -76,7 +76,7 @@ class DemoController
 	$htmlHtml = '';
 }
 
-require __DIR__.'/../lib/Autoloader.php';
+require __DIR__.'/../lib/Ozy/Autoloader.php';
 \Ozy\Autoloader::register();
 
 

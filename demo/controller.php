@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-require __DIR__.'/../lib/Autoloader.php';
+require __DIR__.'/../lib/Ozy/Autoloader.php';
 Ozy\Autoloader::register();
 
 class DemoController
@@ -91,6 +91,7 @@ class DemoController
 		 * 
 		 */
 		$ozy->jquery('#list-of-truths li')->each('
+			console.log(el);
 			$(el).css({color: "lightgreen"});
 		');
 		return $ozy;

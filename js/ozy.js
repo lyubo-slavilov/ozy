@@ -33,6 +33,7 @@ var ozy = {};
 				parameters,
 				function(data){
 					if(type == 'json'){
+						
 						ozy.fn.execCustomCallback(callback, data, 'before');
 						ozy.fn.handleOzyResponse(data);
 						ozy.fn.execCustomCallback(callback, data, 'after');
@@ -70,16 +71,21 @@ var ozy = {};
 				}
 			},
 			handleOzyResponse: function(data){
+				
 				var validationResult = ozy.fn.validateOzyResponse(data);
+				
 				if(!validationResult.valid){
 					ozy.fn.halt(validationResult.message);
 				}
 				if(data.status == 'success'){
+					
 					for(var s in data.statements){
 						var statement = data.statements[s];
 						
 						var handler = 'handle'+ozy.fn.ucfirst(statement.n);
+						
 						if(typeof ozy.statement[handler] == 'function'){
+							
 							ozy.statement[handler].apply(ozy.statement, [statement.o]);
 						}else{
 							//TODO log this more clever
@@ -99,10 +105,21 @@ var ozy = {};
 		statement:{
 			
 			handleCall: function(object){
+				
 				var name = object.name || object.n;
+				
 				var params = object.parameters || object.p;
-				if(typeof window[name] == 'function'){
-					window[name].apply(window, params);
+				if($.browser.msie && $.browser.version < 9){
+					//Of cource! You can't use .apply() on IE < 9 native shitz such az alert(), open(), etc...!
+					//What a surprize, uh?
+					//So we have to do this stupid:
+					var p = '"'+params.join('","')+'"';
+					eval(name+'('+p+')');
+				}else{
+					//Here is the truth!
+					if(typeof window[name] == 'function'){
+						window[name].apply(window, params);
+					}
 				}
 			},
 			handleC: function(object){ return this.handleCall(object)},
@@ -137,13 +154,12 @@ var ozy = {};
 						p = chain[c].parameters || chain[c].p;
 						if(m == 'each'){
 							if(p.length == 1){
-								$jqObject.each(new Function('i', 'el', p[0]));
+								return $jqObject.each(new Function('i', 'el', p[0]));
 							}else{
 								return ozy.statement._handleJqueryEachChain($jqObject, chainCopy);
 							}
 						}
 						$jqObject = $jqObject[m].apply($jqObject, p);
-
 					}
 					return $jqObject;
 			},

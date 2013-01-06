@@ -22,7 +22,7 @@ if(@$_GET['ozyjs']){
 		<link href='http://fonts.googleapis.com/css?family=Monda' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Text+Me+One' rel='stylesheet' type='text/css'>
 		
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
 		<script src="?ozyjs=1"></script>
 		<script>
 			$(function(){
@@ -42,6 +42,12 @@ if(@$_GET['ozyjs']){
 					if($p.is('.nosource')) return;
 					
 					$p.find('a.caller').attr('onclick', 'ozy.call(\'./'+$(this).attr('ozy-call')+'/\'); return false;');
+					if($.browser.msie && $.browser.version < 8){
+						$p.find('a.caller').click(function(){
+							ozy.call('./'+$p.attr('ozy-call'));
+							return false;
+						})
+					}
 					$p.append($('<div class="source"><a class="reveal-source" href="#">View Source</a><div class="html"></div><div class="php"></div></div>'));
 					$p.find('a.reveal-source').click(function(){
 						
@@ -304,11 +310,11 @@ if(@$_GET['ozyjs']){
 						So, let we have this list:
 					</p>
 					<ul id="list-of-truths">
-						<li><span>Physics</span> drives my crazy and it <span>is</span> not <span>cool</span> at all</li>
-						<li>Clever</li>
-						<li>Dummy</li>
-						<li>Smart</li>
-						<li>Funny</li>
+						<li><span>Physics</span> drives my crazy!</li>
+						<li><span>Is</span> there an edge?</li>
+						<li><span>For</span>tunately, Mayans was wrong.</li>
+						<li><span>Smart</span>y si very old templating engine.</li>
+						<li><span>People</span> are strange.</li>
 					</ul>
 					<p>
 						We want to change the color of each &gt;li&lt; element.
@@ -334,11 +340,11 @@ if(@$_GET['ozyjs']){
 						So, let's look to our list again:
 					</p>
 					<ul id="list-of-truths2">
-						<li><span>Physics</span> drives my crazy and it <span>is</span> not <span>cool</span> at all</li>
-						<li>Clever</li>
-						<li>Dummy</li>
-						<li>Smart</li>
-						<li>Funny</li>
+						<li><span>Physics</span> drives my crazy!</li>
+						<li><span>Is</span> there an edge?</li>
+						<li><span>For</span>tunately, Mayans was wrong.</li>
+						<li><span>Smart</span>y si very old templating engine.</li>
+						<li><span>People</span> are strange.</li>
 					</ul>
 					<div class="note">
 						Notice that <code class="i">$ozy->jquery()->each()</code> is called <u>without</u> passing any arguments to <code class="i">each()</code> method.<br/>
