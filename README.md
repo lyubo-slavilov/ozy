@@ -24,7 +24,7 @@ Requirements
 ------------
 TODO
 
-Instalation
+Installation
 -----------
 TODO
 
